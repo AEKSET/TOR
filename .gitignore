@@ -1,0 +1,13 @@
+# Local workspace settings
+.claude/settings.local.json
+
+# Generated exports
+Test Export/
+
+# Backup snapshots of the main HTML file
+index.html.bak_*
+
+# Common OS/editor noise
+Thumbs.db
+.DS_Store
+*.tmp
