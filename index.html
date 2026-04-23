@@ -23593,13 +23593,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
           </div>
         </div>
       </div>
-      <div class="field">
-        <label>มูลค่าโครงการ (บาท) <span class="tor-ref">[หน้าปก / หลักประกัน]</span></label>
-        <input type="text" id="projValue" placeholder="เช่น 5,000,000" oninput="formatMoney(this)" onblur="vField('projValue')">
-        <div class="field-error-msg" id="verr_projValue"></div>
-        <div class="field-warn-msg" id="vwarn_projValue"></div>
-        <p class="thai-reading-hint" id="projValue_thai"></p>
-      </div>
     </div>
   </div>
 
@@ -25202,7 +25195,6 @@ function buildReview() {
       <div class="review-grid-2">
         <div class="review-block"><div class="review-label">ชื่อโครงการ</div><div class="review-value">${escHtml(pName)}</div></div>
         <div class="review-block"><div class="review-label">ฝ่ายเจ้าของโครงการ</div><div class="review-value">${escHtml(v('deptOwner')||'—')}</div></div>
-        <div class="review-block"><div class="review-label">มูลค่าโครงการ</div><div class="review-value">${escHtml(v('projValue')||'—')}</div></div>
         <div class="review-block"><div class="review-label">ระยะเวลา</div><div class="review-value">${escHtml(v('projectDuration')||'—')}</div></div>
         <div class="review-block"><div class="review-label">ประกอบธุรกิจ (ปี)</div><div class="review-value">${escHtml(v('bizYears')||'—')}</div></div>
         <div class="review-block"><div class="review-label">ทุนจดทะเบียน (บาท)</div><div class="review-value">${escHtml(v('regCapital')||'—')}</div></div>
@@ -26602,7 +26594,7 @@ function formatMoney(el, hintId) {
 
 // Init all money fields (call on page load / after TOR import)
 function initMoneyFields() {
-  ['projValue','regCapital','bidBondValue','insurAmount','penaltyMin'].forEach(id => {
+  ['regCapital','bidBondValue','insurAmount','penaltyMin'].forEach(id => {
     const el = document.getElementById(id);
     if (el) formatMoney(el, id + '_thai');
   });
@@ -26641,7 +26633,6 @@ function prefillDemo() {
   document.getElementById('torDate').value = _demoIso(_demoToday);
   updateDateHint(document.getElementById('torDate'));
   document.getElementById('projObjective').value = 'พัฒนาและติดตั้งระบบบริหารจัดการสัญญาและการจัดซื้อจัดจ้างแบบ Turnkey ครอบคลุมตั้งแต่การวางแผนจัดซื้อ การออก TOR การประกวดราคา การทำสัญญา การติดตามการปฏิบัติตามสัญญา จนถึงการปิดโครงการ พร้อม Integration กับระบบบัญชีและ ERP ที่มีอยู่';
-  document.getElementById('projValue').value = '8500000'; formatMoney(document.getElementById('projValue'));
 
   // Step 1 – ขอบเขตของงาน
   document.getElementById('funcCore').value = `- บริหารจัดการสัญญาและจัดซื้อจัดจ้างครบวงจร ตั้งแต่สร้าง PR → อนุมัติ → ทำสัญญา → ติดตาม → ปิดสัญญา
@@ -26939,7 +26930,6 @@ async function exportVendorCompliance() {
     const todayStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()+543}`;
     const pName  = v('projName')   || 'โครงการ';
     const pDept  = v('deptOwner')  || '–';
-    const pValue = v('projValue')  || '–';
     const torType = window._torType || 'turnkey';
     const typeLabel = { turnkey:'Turnkey / พัฒนาระบบ', outsource:'IT Outsource', maintenance:'Maintenance & Support', software:'Software License', hardware:'Hardware / Infrastructure' }[torType] || torType;
 
@@ -27269,8 +27259,6 @@ async function exportVendorCompliance() {
             txt(typeLabel, { size: sz }),
             txt('   |   ฝ่ายเจ้าของโครงการ: ', { bold:true, size: sz }),
             txt(pDept, { size: sz }),
-            txt('   |   มูลค่าโครงการ: ', { bold:true, size: sz }),
-            txt(pValue + ' บาท', { size: sz }),
           ], alignment: AlignmentType.CENTER, spacing: { after: 80 } }),
           new Paragraph({ children: [
             txt('วันที่ออกเอกสาร: ', { bold:true, size: sz }),
@@ -27327,7 +27315,6 @@ const _COMMON_REQUIRED = [
   ['projName',      'ชื่อโครงการ',            0],
   ['deptOwner',     'ฝ่ายงานเจ้าของโครงการ',   0],
   ['projObjective', 'วัตถุประสงค์โครงการ',      0],
-  ['projValue',     'มูลค่าโครงการ',            0],
   ['bizYears',      'ปีที่ประกอบธุรกิจ',        2],
   ['regCapital',    'ทุนจดทะเบียน',             2],
   ['pastProjects',  'จำนวนผลงานที่ผ่านมา',     2],
@@ -27532,7 +27519,7 @@ function forceExport() {
 
 // ── Fields that BLOCK export if missing (hard required) ──
 const HARD_REQUIRED = [
-  'projName','deptOwner','projObjective','projValue',
+  'projName','deptOwner','projObjective',
   'funcCore','funcUsers','funcIntegration','funcReport','funcTraining',
   'nfrPerformance','nfrAvailability','nfrSecurity','nfrInfra','nfrBackup',
   'projectDuration','warrantyPeriod',
@@ -27600,13 +27587,6 @@ const _FIELD_VALIDATORS = {
     else           _vSetState('torDate','valid');
     setTimeout(() => vDateNotPast(el), 10);
   },
-  projValue(val) {
-    if (!val) { _vSetState('projValue','clear'); return; }
-    const num = parseFloat(val.replace(/,/g,''));
-    if (isNaN(num) || num <= 0) _vSetState('projValue','error','มูลค่าโครงการต้องเป็นตัวเลขที่มากกว่า 0');
-    else if (num < 100000)      _vSetState('projValue','warning','มูลค่าต่ำกว่า 100,000 บาท — โปรดตรวจสอบว่าถูกต้อง');
-    else                        _vSetState('projValue','valid');
-  },
   projectStart(val, el) {
     const today = new Date(); today.setHours(0,0,0,0);
     if (!val) { _vSetState('projectStart','clear'); vDateNotPast(el); return; }
@@ -27637,9 +27617,7 @@ const _FIELD_VALIDATORS = {
   bidBondValue(val) {
     if (!val) { _vSetState('bidBondValue','clear'); return; }
     const num     = parseFloat(val.replace(/,/g,''));
-    const projNum = parseFloat((document.getElementById('projValue')?.value||'0').replace(/,/g,''));
     if (isNaN(num) || num <= 0)              _vSetState('bidBondValue','error','Bid Bond ต้องเป็นตัวเลขที่มากกว่า 0');
-    else if (projNum > 0 && num > projNum * 0.05) _vSetState('bidBondValue','warning','Bid Bond สูงกว่า 5% ของมูลค่าโครงการ — โปรดตรวจสอบ');
     else                                     _vSetState('bidBondValue','valid');
   },
   submitEmail(val) {
@@ -27816,18 +27794,7 @@ function validateAll() {
     }
   });
 
-  /* 5. Bid Bond > 5% of project value */
-  const bidOn = document.getElementById('bidHas')?.classList.contains('selected');
-  if (bidOn) {
-    const bidNum  = parseFloat((document.getElementById('bidBondValue')?.value||'0').replace(/,/g,''));
-    const projNum = parseFloat((document.getElementById('projValue')?.value||'0').replace(/,/g,''));
-    if (projNum > 0 && bidNum > projNum * 0.05) {
-      results.push({ type:'warning', field:'bidBondValue', label:'Bid Bond',
-        msg:`Bid Bond (${bidNum.toLocaleString()}) สูงกว่า 5% ของมูลค่าโครงการ`, step:4 });
-    }
-  }
-
-  /* 6. Schedule order */
+  /* 5. Schedule order */
   const schedIssues = validateScheduleOrder();
   schedIssues.forEach(msg => {
     results.push({ type:'warning', field:'sched1', label:'กำหนดการประกวดราคา', msg, step:3 });
@@ -27886,10 +27853,9 @@ function showValidationModalV2(results) {
 // LOCAL SMART SUGGESTION GENERATOR
 // (works offline, no API/CORS needed)
 // ════════════════════════════════════════════════
-function generateLocalSuggestion(hint, projName, projObjective, projValue, duration, attempt) {
+function generateLocalSuggestion(hint, projName, projObjective, duration, attempt) {
   const name    = projName    || 'โครงการ';
   const obj     = projObjective || '';
-  const val     = projValue   || '';
   const dur     = duration    || '12 เดือน';
   const months  = parseInt((dur.match(/(\d+)/) || ['','12'])[1]) || 12;
   const v       = (attempt || 0) % 3;
@@ -27984,7 +27950,7 @@ function generateLocalSuggestion(hint, projName, projObjective, projValue, durat
   }
 
   if (hint === 'func_users') {
-    const isLarge = parseInt((projValue||'').replace(/[^0-9]/g,'')) >= 5000000;
+    const isLarge = false;
     const totalUsers = isLarge ? 500 : 300;
     const concurrent = Math.round(totalUsers * 0.4);
     const variants = [
@@ -28061,7 +28027,7 @@ function generateLocalSuggestion(hint, projName, projObjective, projValue, durat
 
   // ── NFR sub-hints ──
   if (hint === 'nfr_performance') {
-    const isLarge = parseInt((projValue||'').replace(/[^0-9]/g,'')) >= 5000000;
+    const isLarge = false;
     const users = isLarge ? '500' : '300';
     const variants = [
       `- Response Time: หน้าจอหลักตอบสนองภายใน 3 วินาที ที่ ${users} Concurrent Users
@@ -28447,7 +28413,6 @@ async function aiSuggest(fieldId, hint) {
   const projName = getFieldValue('projName') || '(ยังไม่ระบุ)';
   const projType = getFieldValue('projType') || '';
   const projObjective = getFieldValue('projObjective') || '';
-  const projValue = getFieldValue('projValue') || '';
   const projectDuration = getFieldValue('projectDuration') || '';
 
   const prompts = {
@@ -28459,7 +28424,6 @@ async function aiSuggest(fieldId, hint) {
 - ประโยชน์ที่คาดว่าจะได้รับ
 
 ชื่อโครงการ: ${projName}
-มูลค่าโครงการ: ${projValue}
 ระยะเวลา: ${projectDuration}
 
 เขียนเป็นภาษาไทยราชการ กระชับ 3-5 ประโยค ใช้สำนวนแบบ SET TOR จริง ห้ามใส่หัวข้อหรือ bullet point`,
@@ -28469,7 +28433,6 @@ async function aiSuggest(fieldId, hint) {
 ช่วยเขียน Functional Requirements สำหรับโครงการนี้:
 ชื่อโครงการ: ${projName}
 วัตถุประสงค์: ${projObjective}
-มูลค่า: ${projValue}
 
 เขียนเป็นภาษาไทย จัดเป็นข้อ 1-8 ครอบคลุม:
 - Core features ของระบบ
@@ -28483,7 +28446,6 @@ async function aiSuggest(fieldId, hint) {
     nonfunctional: `คุณเป็นผู้เชี่ยวชาญด้านการเขียน Non-Functional Requirements สำหรับ TOR ระบบ Turnkey ของ SET
 
 ช่วยเขียน Non-Functional Requirements สำหรับโครงการ: ${projName}
-มูลค่า: ${projValue}
 
 เขียนเป็นภาษาไทย จัดเป็น bullet point ครอบคลุม:
 - Performance (response time, concurrent users, uptime)
@@ -28516,7 +28478,7 @@ async function aiSuggest(fieldId, hint) {
       suggestion = await callClaudeAPI(geminiKey, geminiModel, prompt);
     } else {
       // Fallback: local template
-      suggestion = generateLocalSuggestion(hint, projName, projObjective, projValue, projectDuration, attempt);
+      suggestion = generateLocalSuggestion(hint, projName, projObjective, projectDuration, attempt);
       // Show hint to set API key
       textEl.textContent = suggestion;
       textEl.dataset.suggestion = suggestion;
@@ -28654,7 +28616,6 @@ async function aiSuggestAll(section) {
 
   const projName       = getFieldValue('projName')       || '(ยังไม่ระบุ)';
   const projObjective  = getFieldValue('projObjective')  || '';
-  const projValue      = getFieldValue('projValue')      || '';
   const projectDuration= getFieldValue('projectDuration')|| '12 เดือน';
 
   const prompts = {
@@ -28662,7 +28623,6 @@ async function aiSuggestAll(section) {
 
 ชื่อโครงการ: ${projName}
 วัตถุประสงค์: ${projObjective}
-มูลค่า: ${projValue}
 ระยะเวลา: ${projectDuration}
 
 ตอบกลับเป็น JSON Object เท่านั้น ไม่มีข้อความอื่น ไม่มี markdown ไม่มี code block ตอบ JSON ตรงๆ ในรูปแบบนี้:
@@ -28676,7 +28636,6 @@ async function aiSuggestAll(section) {
     nonfunctional: `คุณเป็นผู้เชี่ยวชาญด้านการเขียน Non-Functional Requirements สำหรับระบบ Turnkey ของตลาดหลักทรัพย์แห่งประเทศไทย (SET)
 
 ชื่อโครงการ: ${projName}
-มูลค่า: ${projValue}
 ระยะเวลา: ${projectDuration}
 
 ตอบกลับเป็น JSON Object เท่านั้น ไม่มีข้อความอื่น ไม่มี markdown ไม่มี code block ตอบ JSON ตรงๆ ในรูปแบบนี้:
@@ -28706,7 +28665,7 @@ async function aiSuggestAll(section) {
       const raw = await callClaudeAPI(claudeKey, claudeModel, prompts[section], 4096);
       parsed = _parseClaudeJSON(raw);
     } else {
-      parsed = _aiAllFallback(section, projName, projObjective, projValue, projectDuration);
+      parsed = _aiAllFallback(section, projName, projObjective, projectDuration);
       // Show "no key" hint
       setTimeout(() => {
         const body = document.getElementById('aiAllBody');
@@ -28926,7 +28885,7 @@ function _fixLiteralNewlinesInJSON(str) {
   return out;
 }
 
-function _aiAllFallback(section, projName, projObjective, projValue, projectDuration) {
+function _aiAllFallback(section, projName, projObjective, projectDuration) {
   if (section === 'functional') return {
     funcCore:        `- ระบบต้องรองรับการบริหารจัดการ${projName || 'โครงการ'}ครบวงจร\n- รองรับ Workflow การอนุมัติแบบ Multi-level อย่างน้อย 3 ระดับ\n- มีระบบแจ้งเตือนอัตโนมัติผ่าน Email และ LINE Notify\n- รองรับการบันทึก ค้นหา และ Filter ข้อมูลแบบ Full-text Search\n- มี Audit Trail บันทึกการเปลี่ยนแปลงทุกรายการพร้อม Timestamp`,
     funcUsers:       `- ผู้ดูแลระบบ (Admin): กำหนดสิทธิ์และตั้งค่าระบบทั้งหมด\n- ผู้ใช้งาน (User): บันทึกและดูข้อมูลตามสิทธิ์ที่กำหนด\n- ผู้อนุมัติ (Approver): ตรวจสอบและอนุมัติรายการผ่านระบบ\n- รองรับผู้ใช้พร้อมกันไม่น้อยกว่า 200 คน`,
@@ -29129,14 +29088,6 @@ async function handleTORUpload(input) {
       /^(?:ข้อ\s*1\.?\s*)?วัตถุประสงค์/,
     ]);
 
-    // Project value
-    parsed.projValue = extractFirst([
-      /(?:มูลค่า(?:โครงการ|สัญญา|งาน)?)[^\n:]*[:\s]*([\d,]+[^\n]{0,50}บาท)/i,
-      /(?:งบประมาณ)[^\n:]*[:\s]*([\d,]+[^\n]{0,50}บาท)/i,
-      /(?:วงเงิน)[^\n:]*[:\s]*([\d,]+[^\n]{0,50}บาท)/i,
-      /(?:ราคา|ค่าจ้าง)[^\n:]*[:\s]*([\d,]+[^\n]{0,50}บาท)/i,
-    ]);
-
     // Duration
     parsed.projectDuration = extractFirst([
       /ระยะเวลา(?:ดำเนินงาน|ดำเนินการ|โครงการ|สัญญา)?[^\n:]*[:\s]*([^\n]+)/,
@@ -29335,7 +29286,7 @@ async function handleTORUpload(input) {
 
 const FIELD_LABELS = {
   projName:'ชื่อโครงการ', deptOwner:'ฝ่ายงาน', torDate:'วันที่',
-  projObjective:'วัตถุประสงค์', projValue:'มูลค่าโครงการ', projectDuration:'ระยะเวลา',
+  projObjective:'วัตถุประสงค์', projectDuration:'ระยะเวลา',
   bizYears:'ปีที่ประกอบธุรกิจ', regCapital:'ทุนจดทะเบียน', pastProjects:'จำนวนผลงาน',
   funcCore:'ฟังก์ชันหลัก', funcUsers:'User Roles', funcIntegration:'Integration',
   funcReport:'Reporting', funcTraining:'Training',
@@ -29367,7 +29318,7 @@ function showUploadPreview(parsed) {
 
   // Group by category
   const groups = {
-    'ข้อมูลโครงการ': ['projName','deptOwner','torDate','projObjective','projValue','projectDuration'],
+    'ข้อมูลโครงการ': ['projName','deptOwner','torDate','projObjective','projectDuration'],
     'Functional Requirements': ['funcCore','funcUsers','funcIntegration','funcReport','funcTraining'],
     'Non-Functional Requirements': ['nfrPerformance','nfrAvailability','nfrSecurity','nfrInfra','nfrBackup','nfrScale'],
     'คุณสมบัติผู้เสนองาน': ['bizYears','regCapital','pastProjects'],
@@ -29760,7 +29711,6 @@ const _PREFILL_DATA = {
     fields: {
       projName:        'โครงการพัฒนาระบบบริหารจัดการสัญญาและการจัดซื้อจัดจ้าง (Contract & Procurement Management System)',
       deptOwner:       'ฝ่ายเทคโนโลยีสารสนเทศ',
-      projValue:       '8,500,000',
       projObjective:   'พัฒนาระบบบริหารจัดการสัญญาและการจัดซื้อจัดจ้างแบบ Turnkey ครอบคลุมการพัฒนา ติดตั้ง ทดสอบ และฝึกอบรมผู้ใช้งาน พร้อม Source Code และเอกสารครบชุด',
       projectDuration: '12 เดือน',
       funcCore:        '- บริหารจัดการสัญญาครบวงจร ตั้งแต่การร่าง อนุมัติ ลงนาม และติดตาม\n- รองรับ Workflow การอนุมัติแบบ Multi-level\n- มีระบบแจ้งเตือนอัตโนมัติเมื่อสัญญาใกล้หมดอายุ\n- บริหารจัดการการจัดซื้อจัดจ้าง PR/PO ครบวงจร',
@@ -29814,7 +29764,6 @@ const _PREFILL_DATA = {
     fields: {
       projName:        'โครงการจัดจ้างบุคลากร IT Outsource ประจำปี 2568',
       deptOwner:       'ฝ่ายเทคโนโลยีสารสนเทศ',
-      projValue:       '3,600,000',
       projObjective:   'จัดจ้างบุคลากร IT Outsource เพื่อสนับสนุนการดำเนินงานด้านเทคโนโลยีสารสนเทศของตลาดหลักทรัพย์ฯ ระยะเวลา 12 เดือน',
       projectDuration: '12 เดือน',
       osMainScope:     '- ดำเนินการตามโครงการหรือหน้าที่ที่ได้รับมอบหมายจากตลาดหลักทรัพย์\n- ประสานงานร่วมกับทีมที่เกี่ยวข้องเพื่อให้สอดคล้องกับแผนงาน\n- ส่งมอบงานตาม Timeline ที่ตลาดหลักทรัพย์กำหนด\n- จัดทำรายงานความคืบหน้าและเอกสารที่เกี่ยวข้อง',
@@ -29854,7 +29803,6 @@ const _PREFILL_DATA = {
     fields: {
       projName:        'โครงการบำรุงรักษาและสนับสนุนระบบ (Maintenance & Support)',
       deptOwner:       'ฝ่ายเทคโนโลยีสารสนเทศ',
-      projValue:       '2,400,000',
       projObjective:   'จัดจ้างบำรุงรักษาและสนับสนุนระบบ IT ของตลาดหลักทรัพย์ฯ ให้มีเสถียรภาพ พร้อมใช้งาน และสอดคล้องกับ SLA ที่กำหนด',
       projectDuration: '12 เดือน',
       maintenanceCond: 'SLA 8x5 วันทำการ, Critical Bug แก้ไขภายใน 4 ชั่วโมง, Major Bug ภายใน 1 วันทำการ, Minor Bug ภายใน 5 วันทำการ',
@@ -29907,7 +29855,6 @@ const _PREFILL_DATA = {
     fields: {
       projName:        'โครงการจัดหา Software License และบริการ (Software License / SaaS)',
       deptOwner:       'ฝ่ายเทคโนโลยีสารสนเทศ',
-      projValue:       '2,500,000',
       projObjective:   'จัดหา Software License พร้อมบริการ Implementation และ Maintenance สำหรับใช้งานภายในองค์กรตลาดหลักทรัพย์',
       projectDuration: '1 ปี (ต่ออายุได้)',
       swName:          'Microsoft 365 Business Premium',
@@ -29954,7 +29901,6 @@ const _PREFILL_DATA = {
     fields: {
       projName:        'โครงการจัดหาอุปกรณ์ Server และ Storage สำหรับ Data Center',
       deptOwner:       'ฝ่ายเทคโนโลยีสารสนเทศ',
-      projValue:       '15,000,000',
       projObjective:   'จัดหาอุปกรณ์ Server, Storage และ Network Infrastructure เพื่อรองรับการขยาย Data Center และทดแทนอุปกรณ์ที่สิ้นอายุการใช้งาน',
       projectDuration: '60 วัน (ส่งมอบ) + Warranty 3 ปี',
       hwPurpose:       'จัดหา Server และ Storage เพื่อรองรับการขยาย Data Center ของตลาดหลักทรัพย์ฯ พร้อมทดแทนอุปกรณ์ที่สิ้นอายุการใช้งาน',
@@ -30030,7 +29976,7 @@ function _applyPrefill(type) {
     const el = document.getElementById(id);
     if (!el) return;
     el.value = val;
-    if (id === 'projValue' || id === 'regCapital' || id === 'bidBondValue') {
+    if (id === 'regCapital' || id === 'bidBondValue') {
       formatMoney(el);
     }
     if (el.id && typeof updateDateHint === 'function' && el.type === 'date') updateDateHint(el);
