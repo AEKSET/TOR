@@ -22670,20 +22670,37 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
 
   /* ─── HEADER BUTTONS ─── */
+  .hdr-actions { display: flex; align-items: center; gap: 6px; }
+  .hdr-divider { width: 1px; height: 26px; background: rgba(255,255,255,0.18); flex-shrink: 0; margin: 0 2px; }
   .hdr-btn {
-    font-family: 'Sarabun', sans-serif; font-size: 0.78rem; font-weight: 700;
-    cursor: pointer; padding: 7px 14px; border-radius: 6px;
-    display: flex; align-items: center; gap: 6px;
+    font-family: 'Sarabun', sans-serif; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; padding: 6px 13px; height: 34px; border-radius: 7px;
+    display: flex; align-items: center; gap: 5px;
     white-space: nowrap; flex-shrink: 0; transition: all 0.15s;
-    border: 1.5px solid transparent;
+    border: 1.5px solid transparent; letter-spacing: 0.01em;
   }
-  .hdr-btn--gold     { background: var(--accent2); color: #1a3a5c; border: none; padding: 7px 16px; }
-  .hdr-btn--ghost    { background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.3); }
-  .hdr-btn--ghost:hover    { background: rgba(255,255,255,0.22); }
-  .hdr-btn--contract { background: rgba(230,92,0,0.35); color: #fde8d0; border-color: rgba(230,92,0,0.6); }
-  .hdr-btn--contract:hover { background: rgba(230,92,0,0.55); }
-  .hdr-btn--danger   { background: rgba(220,38,38,0.25); color: #fca5a5; border-color: rgba(220,38,38,0.5); }
-  .hdr-btn--danger:hover   { background: rgba(220,38,38,0.45); }
+  .hdr-btn svg { opacity: 0.85; }
+  .hdr-btn--ghost {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.88);
+    border-color: rgba(255,255,255,0.2);
+  }
+  .hdr-btn--ghost:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.35); }
+  .hdr-btn--contract {
+    background: var(--accent2);
+    color: #1a2c3e;
+    border-color: transparent;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(200,151,42,0.35);
+  }
+  .hdr-btn--contract:hover { background: #d9a830; box-shadow: 0 3px 12px rgba(200,151,42,0.5); }
+  .hdr-btn--danger {
+    background: transparent;
+    color: #fca5a5;
+    border-color: rgba(220,38,38,0.35);
+  }
+  .hdr-btn--danger:hover { background: rgba(220,38,38,0.25); border-color: rgba(220,38,38,0.6); }
+  .hdr-btn--gold { background: var(--accent2); color: #1a3a5c; border: none; }
   .hdr-type-badge {
     background: var(--accent2); color: var(--accent);
     font-size: 0.65rem; font-weight: 700; padding: 1px 8px;
@@ -22885,15 +22902,15 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   }
 
   /* ─── SCHEDULE TABLE ─── */
-  .sched-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .sched-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
   .sched-table th {
     background: var(--accent); color: white;
-    padding: 0.6rem 0.8rem; text-align: left; font-weight: 600;
+    padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.02em;
   }
-  .sched-table td { padding: 0.4rem 0.8rem; border-bottom: 1px solid var(--border-light); }
-  .sched-table tr:nth-child(even) td { background: #f9f8f5; }
-  .sched-table td:first-child { width: 40px; text-align: center; font-weight: 700; color: var(--accent); }
-  .sched-table td:nth-child(2) { width: 40%; }
+  .sched-table td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+  .sched-table tr:not(.sched-row-off):hover td { background: #f0f5ff !important; }
+  .sched-table td:first-child { width: 64px; text-align: center; padding: 0.5rem 0.4rem; }
+  .sched-table td:nth-child(2) { width: 38%; font-weight: 500; }
   .sched-table input { border: 1px solid var(--border); padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 0.82rem; width: 100%; }
 
   /* ─── BUTTONS ─── */
@@ -23211,45 +23228,83 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   .val-modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
 
   /* Schedule calendar picker cells */
-  .sched-table td:last-child { vertical-align: top; padding: 6px 8px; min-width: 220px; }
-  .sched-picker { display: flex; flex-direction: column; gap: 4px; }
-  .sched-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .sched-table td:last-child { vertical-align: top; padding: 0.65rem 1rem; min-width: 240px; overflow-x: auto; }
+  .sched-picker { display: flex; flex-direction: column; gap: 5px; }
+  .sched-row { display: flex; gap: 6px; align-items: center; flex-wrap: nowrap; }
   .sched-date-input, .sched-time-input {
-    padding: 5px 8px;
-    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border: 1.5px solid var(--border);
     border-radius: 6px;
     font-size: 0.82rem;
     font-family: 'Sarabun', sans-serif;
     background: var(--input-bg);
     color: var(--text);
+    height: 34px;
     outline: none;
-    transition: border-color .15s;
+    transition: border-color .15s, box-shadow .15s;
   }
-  .sched-date-input:focus, .sched-time-input:focus { border-color: var(--accent); }
-  .sched-date-input { width: 140px; }
-  .sched-time-input { width: 90px; }
+  .sched-date-input:focus, .sched-time-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(26,58,92,0.1);
+  }
+  .sched-date-input { width: 148px; }
+  .sched-time-input { width: 115px; }
   .sched-dash { font-size: 0.85rem; color: var(--muted); }
   .sched-prefix { font-size: 0.78rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
-  .sched-preview { font-size: 0.74rem; color: var(--accent3); font-weight: 500; min-height: 1em; }
-  /* ── Schedule row toggle ── */
-  .sched-table td:first-child { width: 52px !important; }
-  .sched-num { display: block; font-weight: 700; color: var(--accent); font-size: 0.82rem; margin-bottom: 4px; }
-  .sched-toggle-lbl { display: inline-block; cursor: pointer; }
+  .sched-preview {
+    font-size: 0.74rem; font-weight: 600; color: #15803d;
+    background: #f0fdf4; border: 1px solid #bbf7d0;
+    border-radius: 4px; padding: 2px 8px;
+    display: inline-block;
+  }
+  .sched-preview:empty { display: none; }
+  /* ── Schedule row number badge + toggle ── */
+  .sched-table td:first-child { width: 64px !important; vertical-align: middle; }
+  .sched-num {
+    display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: white;
+    font-size: 0.75rem; font-weight: 700;
+    margin: 0 auto 6px;
+  }
+  .sched-toggle-lbl { display: flex; align-items: center; justify-content: center; cursor: pointer; }
   .sched-toggle-lbl input[type="checkbox"] {
-    width: 30px; height: 15px; appearance: none; -webkit-appearance: none;
-    background: #d1d5db; border-radius: 15px; position: relative;
+    width: 32px; height: 17px; appearance: none; -webkit-appearance: none;
+    background: #d1d5db; border-radius: 17px; position: relative;
     cursor: pointer; transition: background .2s; vertical-align: middle;
   }
   .sched-toggle-lbl input[type="checkbox"]:checked { background: #10b981; }
   .sched-toggle-lbl input[type="checkbox"]::before {
-    content: ''; position: absolute; width: 11px; height: 11px;
+    content: ''; position: absolute; width: 13px; height: 13px;
     border-radius: 50%; background: white; top: 2px; left: 2px;
-    transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.25);
+    transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.3);
   }
   .sched-toggle-lbl input[type="checkbox"]:checked::before { transform: translateX(15px); }
   /* Disabled row */
-  .sched-table tr.sched-row-off td:not(:first-child) { opacity: 0.3; pointer-events: none; }
-  .sched-table tr.sched-row-off td:first-child .sched-num { opacity: 0.4; }
+  .sched-table tr.sched-row-off { background: #fafafa; }
+  .sched-table tr.sched-row-off td:not(:first-child) { opacity: 0.2; pointer-events: none; }
+  .sched-table tr.sched-row-off td:nth-child(2) { text-decoration: line-through; color: #9ca3af; }
+  .sched-table tr.sched-row-off .sched-num { background: #d1d5db; color: #6b7280; }
+  /* Fix: date-wrap must be inline inside flex sched-row */
+  .sched-row .date-wrap { display: inline-flex; flex-shrink: 0; }
+  .sched-row .date-wrap .date-display { width: 148px; min-width: 148px; font-size: 0.82rem; min-height: 34px; padding: 0 36px 0 10px; }
+  /* Teams link field */
+  .sched-teams-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+  .sched-teams-label {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 0.74rem; font-weight: 700; color: #5b5ea6;
+    white-space: nowrap; padding: 3px 8px;
+    background: #ededf8; border-radius: 4px;
+    border: 1px solid #c5c5e8;
+  }
+  .sched-teams-input {
+    flex: 1; padding: 5px 10px; height: 30px;
+    border: 1.5px solid #c5c5e8; border-radius: 6px;
+    font-size: 0.79rem; font-family: inherit; color: var(--text);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .sched-teams-input:focus { border-color: #5b5ea6; box-shadow: 0 0 0 3px rgba(91,94,166,0.12); outline: none; }
+  .sched-teams-input::placeholder { color: #a5a5c0; }
   /* Thai date hint under torDate / projectStart */
   .date-hint { font-size: 0.75rem; color: var(--accent3); font-weight: 500; margin-top: 4px; min-height: 1.1em; }
 
@@ -23337,27 +23392,31 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         <div class="header-sub">Terms of Reference (TOR) Generator — Turnkey / Outsource <span id="torTypeBadge" class="hdr-type-badge">Turnkey</span></div>
       </div>
     </div>
-    <label id="uploadLabel" title="อัปโหลด TOR เดิมเพื่อ prefill" class="hdr-btn hdr-btn--ghost">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      โหลดจาก TOR เดิม
-      <input type="file" accept=".docx" style="display:none" onchange="handleTORUpload(this)">
-    </label>
-    <button onclick="saveDraft()" id="saveDraftBtn" title="บันทึก Draft ลง Browser (localStorage)" class="hdr-btn hdr-btn--ghost">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-      <span id="saveDraftLabel">บันทึก Draft</span>
-    </button>
-    <button onclick="saveTORForContract()" id="saveContractBtn" title="บันทึก TOR นี้เพื่อใช้ใน Contract Generator" class="hdr-btn hdr-btn--contract">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-      <span>บันทึกเข้า Contract</span>
-    </button>
-    <button onclick="openAiSettings()" id="aiSettingsBtn" title="ตั้งค่า AI (Anthropic Claude)" class="hdr-btn hdr-btn--ghost">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
-      <span id="aiSettingsBtnLabel">⚙️ ตั้งค่า AI</span>
-    </button>
-    <button onclick="openClearConfirm()" title="ล้างข้อมูลทั้งหมดในฟอร์ม" class="hdr-btn hdr-btn--danger">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-      ล้างข้อมูลทั้งหมด
-    </button>
+    <div class="hdr-actions">
+      <label id="uploadLabel" title="อัปโหลด TOR เดิมเพื่อ prefill" class="hdr-btn hdr-btn--ghost">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        โหลดจาก TOR เดิม
+        <input type="file" accept=".docx" style="display:none" onchange="handleTORUpload(this)">
+      </label>
+      <button onclick="saveDraft()" id="saveDraftBtn" title="บันทึก Draft ลง Browser (localStorage)" class="hdr-btn hdr-btn--ghost">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <span id="saveDraftLabel">บันทึก Draft</span>
+      </button>
+      <button onclick="saveTORForContract()" id="saveContractBtn" title="บันทึก TOR นี้เพื่อใช้ใน Contract Generator" class="hdr-btn hdr-btn--contract">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        <span>บันทึกเข้า Contract</span>
+      </button>
+      <div class="hdr-divider"></div>
+      <button onclick="openAiSettings()" id="aiSettingsBtn" title="ตั้งค่า AI (Anthropic Claude)" class="hdr-btn hdr-btn--ghost">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+        <span id="aiSettingsBtnLabel">⚙️ ตั้งค่า AI</span>
+      </button>
+      <div class="hdr-divider"></div>
+      <button onclick="openClearConfirm()" title="ล้างข้อมูลทั้งหมดในฟอร์ม" class="hdr-btn hdr-btn--danger">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        ล้างข้อมูล
+      </button>
+    </div>
   </div>
 </header>
 
@@ -24421,13 +24480,17 @@ https://github.com/nodeca/pako/blob/main/LICENSE
           <td>
             <input type="hidden" id="sched4">
             <div class="sched-picker">
+              <input type="date" id="sched4_d" class="sched-date-input" onchange="updateSched(4)">
               <div class="sched-row">
-                <input type="date" id="sched4_d" class="sched-date-input" onchange="updateSched(4)">
                 <span class="sched-prefix">เวลา</span>
                 <input type="time" id="sched4_t" class="sched-time-input" value="10:00" onchange="updateSched(4)">
                 <span class="sched-prefix">น.</span>
               </div>
               <span class="sched-preview" id="sched4_preview"></span>
+              <div class="sched-teams-row">
+                <span class="sched-teams-label">&#128279; MS Teams</span>
+                <input type="url" id="sched4_teams" class="sched-teams-input" placeholder="https://teams.microsoft.com/l/meetup-join/...">
+              </div>
             </div>
           </td>
         </tr>
@@ -24903,15 +24966,28 @@ function dismissDeployNotice() {
   document.getElementById('deployNotice')?.style.setProperty('display', 'none');
 }
 
+function _isStepComplete(stepIdx) {
+  if (typeof getRequiredFields !== 'function') return false;
+  const rf = getRequiredFields().filter(([,,s]) => s === stepIdx);
+  if (rf.length === 0) return false;
+  return rf.every(([id]) => { const el = document.getElementById(id); return el && el.value.trim(); });
+}
+
 function _syncSidebar(step) {
   for (let i = 0; i < 8; i++) {
     const el = document.getElementById('sideStep' + i);
     const icon = document.getElementById('ssIcon' + i);
     if (!el) continue;
     el.classList.remove('active','done');
-    if (i < step)      { el.classList.add('done');   if (icon) icon.innerHTML = '✓'; }
-    else if (i === step){ el.classList.add('active'); if (icon) icon.innerHTML = String(i+1); }
-    else               {                              if (icon) icon.innerHTML = String(i+1); }
+    if (i === step) {
+      el.classList.add('active');
+      if (icon) icon.innerHTML = String(i+1);
+    } else if (_isStepComplete(i)) {
+      el.classList.add('done');
+      if (icon) icon.innerHTML = '✓';
+    } else {
+      if (icon) icon.innerHTML = String(i+1);
+    }
   }
   // breadcrumb
   const bc = document.getElementById('bcStepName');
@@ -24988,10 +25064,11 @@ document.addEventListener('DOMContentLoaded', function() {
   initDeployNotice();
   initMoneyFields();
   initDateDisplay();   // wrap all date inputs with Thai display
-  // Set torDate default to today if not already set (e.g. from draft restore)
+  // Always set torDate to today on load (overridden again after draft restore below)
   const _torDateEl = document.getElementById('torDate');
-  if (_torDateEl && !_torDateEl.value) {
-    _torDateEl.value = new Date().toISOString().split('T')[0];
+  if (_torDateEl) {
+    const _tn = new Date();
+    _torDateEl.value = `${_tn.getFullYear()}-${String(_tn.getMonth()+1).padStart(2,'0')}-${String(_tn.getDate()).padStart(2,'0')}`;
     updateDateHint(_torDateEl);
   }
   // Init torDate / projectStart hints if pre-filled
@@ -26554,7 +26631,7 @@ function prefillDemo() {
   const _demoToday = new Date(); _demoToday.setHours(0,0,0,0);
   const _demoIso = (d, offsetDays=0) => {
     const r = new Date(d); r.setDate(r.getDate() + offsetDays);
-    return r.toISOString().split('T')[0];
+    return `${r.getFullYear()}-${String(r.getMonth()+1).padStart(2,'0')}-${String(r.getDate()).padStart(2,'0')}`;
   };
 
   if (_type === 'turnkey') {
@@ -27366,6 +27443,9 @@ function updateCompleteness() {
       }
     }
   }
+
+  // Sync sidebar checkmarks with actual field completion
+  if (typeof _syncSidebar === 'function') _syncSidebar(currentStep);
 
   return missing;
 }
@@ -29614,6 +29694,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('input',  scheduleAutoSave);
   document.body.addEventListener('change', scheduleAutoSave);
   loadDraftOnStart();
+  // Always reset torDate to today after draft restore (draft may carry an old date)
+  const _td = document.getElementById('torDate');
+  if (_td) { const _tn2=new Date(); _td.value=`${_tn2.getFullYear()}-${String(_tn2.getMonth()+1).padStart(2,'0')}-${String(_tn2.getDate()).padStart(2,'0')}`; updateDateHint(_td); }
   setTorType('turnkey'); // init type
   addOutsourceRole();    // add one default outsource role row
   addHwItem();           // add one default hardware item row
